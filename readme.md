@@ -11,6 +11,6 @@ O NEXUS nasceu em Manaus/AM, da necessidade de extrair performance de hardware a
 
 ### 📦 Como rodar
 1. Instale as dependências: `pip install Pillow psutil requests`
-2. Execute: `python main.py`
+2. Execute: `python nexuslauncher.py`
 
 **Projeto 100% Grátis.**
