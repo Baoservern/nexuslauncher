@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Launcher V3.0 - Terminal de Performance</title>
+    <style>
+        /* --- ESTILO TÁTICO NEXUS (CSS) --- */
+        :root {
+            --bg-color: #0B0B0B;       /* Fundo Principal */
+            --panel-color: #121212;    /* Painéis e Cards */
+            --border-color: #222222;   /* Bordas Sutis */
+            --text-color: #FFFFFF;     /* Texto Principal */
+            --accent-color: #00ffff;   /* Acento Neon (Ciano) */
+            --accent-hover: #00cccc;   /* Hover do Acento */
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-mono: 'Consolas', 'Courier New', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- LAYOUT PRINCIPAL --- */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR (Réplica do Launcher) --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--panel-color);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 0;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 50px;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #777;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 15px 30px;
+            display: block;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .status-panel {
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .status-item {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        .main-content {
+            margin-left: 260px; /* Largura da Sidebar */
+            flex: 1;
+            padding: 60px;
+        }
+
+        section {
+            margin-bottom: 80px;
+            scroll-margin-top: 60px; /* Para o scroll não cobrir o título */
+        }
+
+        h1, h2 {
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        h1 { font-size: 48px; color: var(--text-color); }
+        h2 { font-size: 28px; color: var(--accent-color); }
+
+        .highlight { color: var(--accent-color); }
+
+        p {
+            font-size: 16px;
+            color: #AAAAAA;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+
+        /* --- BOTÕES TÁTICOS --- */
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            padding: 15px 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--panel-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            margin-left: 15px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* --- GRID DE RECURSOS (Réplica dos Cards) --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #888888;
+        }
+
+        /* --- SEÇÃO HISTÓRIA (Blockquote) --- */
+        .story-blockquote {
+            background-color: var(--panel-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 30px;
+            font-style: italic;
+            color: #CCCCCC;
+            max-width: 800px;
+        }
+
+        /* --- TABELA DE REQUISITOS --- */
+        .specs-table {
+            width: 100%;
+            max-width: 600px;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+        }
+
+        .specs-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .specs-label {
+            color: var(--accent-color);
+            font-weight: bold;
+            width: 40%;
+        }
+
+        .specs-value {
+            color: var(--text-color);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 100px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #444;
+        }
+
+        /* RESPONSIVIDADE BÁSICA */
+        @media (max-width: 900px) {
+            .container { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 20px 0;
+            }
+            .logo { margin-bottom: 20px; }
+            .main-content { margin-left: 0; padding: 30px; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="sidebar">
+            <div class="logo">NEXUS V3.0</div>
+            <a href="#inicio" class="nav-link">🎮 INÍCIO</a>
+            <a href="#arsenal" class="nav-link">🚀 ARSENAL TÁTICO</a>
+            <a href="#historia" class="nav-link">📖 MINHA HISTÓRIA</a>
+            <a href="#requisitos" class="nav-link">⚙️ REQUISITOS</a>
+            <a href="#download" class="nav-link">📥 DOWNLOAD</a>
+
+            <div class="status-panel">
+                <div class="status-item">PROJETO: ATIVO</div>
+                <div class="status-item">LICENÇA: MIT (GRÁTIS)</div>
+                <div class="status-item">FOCO: LEGACY HARDWARE</div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            
+            <section id="inicio">
+                <h1>Performance extrema para quem não aceita o <span class="highlight">'Game Over'</span>.</h1>
+                <p>O NEXUS V3.0 é um terminal de otimização tática e gerenciamento de biblioteca, forjado para extrair cada frame de hardware antigo. 100% Grátis, Open Source e focado no Windows 7.</p>
+                <div class="action-buttons">
+                    <a href="#download" class="btn btn-primary">Baixar Agora</a>
+                    <a href="https://github.com/SEU_USUARIO/nexus-launcher" target="_blank" class="btn btn-secondary">Ver no GitHub</a>
+                </div>
+            </section>
+
+            <section id="arsenal">
+                <h2>O Arsenal Tático</h2>
+                <p>6 módulos de combate integrados para aniquilar processos inúteis e priorizar o seu jogo.</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧹</div>
+                        <div class="feature-title">Clean Temp</div>
+                        <div class="feature-desc">Extermínio completo de arquivos temporários residuais antes do play.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📡</div>
+                        <div class="feature-title">Kill Telemetry</div>
+                        <div class="feature-desc">Bloqueia espionagem e updates automáticos do Windows em tempo real.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <div class="feature-title">Stop Services</div>
+                        <div class="feature-desc">Desativa serviços pesados e desnecessários com um único clique.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">Priority Inversa</div>
+                        <div class="feature-desc">Força bruta para o jogo, silêncio para o sistema operacional.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🖥️</div>
+                        <div class="feature-title">Suspender Explorer</div>
+                        <div class="feature-desc">Ganha RAM massiva derrubando a Shell do Windows durante o gameplay.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <div class="feature-title">Disable Defender</div>
+                        <div class="feature-desc">Controle total sobre o antivírus para evitar quedas súbitas de FPS.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="historia">
+                <h2>Nascido em Manaus</h2>
+                <blockquote class="story-blockquote">
+                    "O NEXUS nasceu no calor de Manaus, fruto da necessidade real de um estudante que se recusava a aceitar que o hardware antigo era lixo. O projeto começou como uma tentativa de restaurar a performance de um netbook Acer Ferrari One 200 (ZH6)... provando que com código inteligente e otimização bruta, é possível dar vida nova a qualquer PC."
+                </blockquote>
+            </section>
+
+            <section id="requisitos">
+                <h2>Especificações do Sistema</h2>
+                <p>O NEXUS prova que hardware antigo ainda tem lenha pra queimar.</p>
+                <table class="specs-table">
+                    <tr>
+                        <td class="specs-label">Processador</td>
+                        <td class="specs-value">Dual Core 1.0 GHz (ou superior)</td>
+                    </tr>
+                    <tr>
+                        <td class="specs-label">Memória RAM</td>
+                        <td class="specs-value">4GB DDR2 (ou superior)</td>
+                    </tr>
+                    <tr>
+                        <td class="specs-label">Sistema Operacional</td>
+                        <td class="specs-value">Windows 7 (Otimizado), 8, 10 ou 11</td>
+                    </tr>
+                    <tr>
+                        <td class="specs-label">Python</td>
+                        <td class="specs-value">3.8+ (Dependências: Pillow, psutil, requests)</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="download">
+                <h2>Terminal de Download</h2>
+                <p>Repositório oficial no GitHub. Instalação rápida via PIP.</p>
+                <div class="action-buttons">
+                    <a href="https://github.com/Baoservern/nexuslauncher" class="btn btn-primary">Download ZIP</a>
+                </div>
+            </section>
+
+            <footer>
+                NEXUS Launcher V3.0 | Desenvolvido em Manaus/AM | 2026<br>
+                seco seco seco fio.
+            </footer>
+
+        </main>
+    </div>
+
+</body>
+</html>
