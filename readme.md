@@ -1,4 +1,4 @@
-# NEXUS Launcher V3.0 🚀
+# NEXUS Launcher V2.0 🚀
 
 Otimizador e Gerenciador de jogos focado em performance extrema para Windows 7, 8, 10 e 11.
 
